@@ -1,0 +1,6 @@
+torch
+torchvision
+opencv-python
+numpy
+grad-cam
+pillow
