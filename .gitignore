@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+.conda/
+*.pt
+*.pth
+*onnx
+
+input_images/
+result_images/
