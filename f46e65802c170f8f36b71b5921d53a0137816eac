@@ -1,0 +1,15 @@
+{
+  "event": "security_override",
+  "timestamp": "2025-11-27T18:54:30.196005",
+  "user": "pierre.oria@incognia.com",
+  "branch": "feat/adversarial",
+  "files": [
+    "d",
+    "f",
+    "s"
+  ],
+  "detectors": [
+    "SOPS"
+  ],
+  "secrets_found": 6
+}
