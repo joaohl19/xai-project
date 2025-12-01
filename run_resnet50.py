@@ -6,8 +6,9 @@ import numpy as np
 from torchvision.models import resnet50
 from pytorch_grad_cam import GradCAM, GuidedBackpropReLUModel
 from utils.classifier_output_targets import ClassifierOutputTargets
+from utils.counterfactual_gradcam import CounterfactualGradCAM
 from pytorch_grad_cam.utils.image import preprocess_image
-from utils.explainable_methods import run_gradcam, run_guided_backprop, run_guided_gradcam
+from utils.explainable_methods import run_gradcam, run_guided_backprop, run_guided_gradcam, run_counterfactual_gradcam
 
 def search_image_paths(input_folder):
     image_paths = []
@@ -20,7 +21,7 @@ def search_image_paths(input_folder):
     return image_paths
 
 
-INPUT_FOLDER = "inputs"
+INPUT_FOLDER = "input"
 OUTPUT_FOLDER_PREFIX = "outputs_resnet50"
 
 # Setting up the device where the model will run
@@ -41,9 +42,10 @@ model.eval()
 image_paths = search_image_paths(INPUT_FOLDER)
 print(f"{len(image_paths)} images found.")
 
-# Setting up Grad-CAM for the last convolutional layer
+# Setting up Grad-CAM  and counterfactual Grad-CAM for the last convolutional layer
 target_layers = [model.layer4[-1]]
 grad_cam = GradCAM(model=model, target_layers=target_layers) 
+counterfactual_grad_cam = CounterfactualGradCAM(model=model, target_layers=target_layers)
 
 guided_backprop = GuidedBackpropReLUModel(model=model, device=device)
 for img_path in image_paths:
@@ -61,21 +63,28 @@ for img_path in image_paths:
         input_tensor = preprocess_image(rgb_img,
                                         mean=[0.485, 0.456, 0.406],
                                         std=[0.229, 0.224, 0.225])
-        
-        targets_gradcam = [ClassifierOutputTargets(281)]
+        prediction = torch.argmax(model(input_tensor).squeeze(0)).item()
+
+        targets_gradcam = None
+        print("Runnig Grad-CAM...")
         run_gradcam(filename, targets_gradcam, 
                     input_tensor,rgb_img, 
-                    OUTPUT_FOLDER_PREFIX,grad_cam)
+                    OUTPUT_FOLDER_PREFIX,grad_cam, prediction)
         
+        print("Runnig counterfactual Grad-CAM...")
+        run_counterfactual_gradcam(filename, targets_gradcam, 
+                    input_tensor,rgb_img, 
+                    OUTPUT_FOLDER_PREFIX,counterfactual_grad_cam, prediction)
         
-        target_guided_backprop = 281
+        target_guided_backprop = None
+        print("Runnig Guided Backpropagation...")
         run_guided_backprop(filename, target_guided_backprop, input_tensor, 
-                            OUTPUT_FOLDER_PREFIX, guided_backprop)
-    
-        target_guided_gradcam = 281
+                            OUTPUT_FOLDER_PREFIX, guided_backprop, prediction)
+        
+        target_guided_gradcam = None
+        print("Runnig Guided Grad-CAM...")
         run_guided_gradcam(filename, target_guided_gradcam,input_tensor, 
-                           OUTPUT_FOLDER_PREFIX, guided_backprop, grad_cam)
-
+                           OUTPUT_FOLDER_PREFIX, guided_backprop, grad_cam, prediction)
     except Exception as e:
         print(f"Error in image {filename}: {e}")
 
