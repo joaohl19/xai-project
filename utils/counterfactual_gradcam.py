@@ -1,11 +1,11 @@
 import numpy as np
 from pytorch_grad_cam.base_cam import BaseCAM
 
-class ModifiedGradCAM(BaseCAM):
+class CounterfactualGradCAM(BaseCAM):
     def __init__(self, model, target_layers,
                  reshape_transform=None):
         super(
-            ModifiedGradCAM,
+            CounterfactualGradCAM,
             self).__init__(
             model,
             target_layers,
