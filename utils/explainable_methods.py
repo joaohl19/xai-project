@@ -94,4 +94,3 @@ def run_guided_gradcam(filename:str, target:Optional[int],
     os.makedirs(save_folder, exist_ok=True)
     save_path = os.path.join(save_folder, f"{class_label};{filename}")
     cv2.imwrite(save_path, guided_gradcam_img[:, :, ::-1])
-
