@@ -58,13 +58,15 @@ def run_counterfactual_gradcam(filename:str, targets:List[ClassifierOutputTarget
 def run_guided_backprop(filename:str, target:int, 
                         input_tensor:torch.Tensor, output_folder_prefix:str, 
                         guided_backprop:GuidedBackpropReLUModel, prediction:int):
-    guided_backprop_vis = guided_backprop(input_tensor, target_category=target)
-    guided_backprop_img = deprocess_image(guided_backprop_vis)
-    # Save guided_backprop img
     if(target is None): # label will be predicted class
         class_label = classes[prediction]
+        target = prediction
     else:
         class_label = classes[target]
+    guided_backprop_vis = guided_backprop(input_tensor, target_category=target)
+    guided_backprop_img = deprocess_image(guided_backprop_vis)
+
+    # Save guided_backprop img
     save_folder = os.path.join(output_folder_prefix, f"guided_backprop")
     os.makedirs(save_folder, exist_ok=True)
     save_path = os.path.join(save_folder, f"{class_label};{filename}")
@@ -74,6 +76,12 @@ def run_guided_gradcam(filename:str, target:Optional[int],
                     input_tensor:torch.Tensor, output_folder_prefix:str, 
                     guided_backprop:GuidedBackpropReLUModel, grad_cam:GradCAM, prediction:int):
             
+    if(target is None): # label will be predicted class
+        class_label = classes[prediction]
+        target = prediction
+    else:
+        class_label = classes[target]
+
     # Get guided backprop visualization
     guided_backprop_vis = guided_backprop(input_tensor, target_category=target)
 
@@ -84,12 +92,7 @@ def run_guided_gradcam(filename:str, target:Optional[int],
     
     # Merge both visualizations and convert them to a visible image
     guided_gradcam_img = deprocess_image(guided_backprop_vis * grad_cam_vis)
-
-    # Save guided_backprop img
-    if(target is None): # label will be predicted class
-        class_label = classes[prediction]
-    else:
-        class_label = classes[target]
+    
     save_folder = os.path.join(output_folder_prefix, f"guided_grad-cam")
     os.makedirs(save_folder, exist_ok=True)
     save_path = os.path.join(save_folder, f"{class_label};{filename}")
