@@ -4,9 +4,8 @@ import cv2
 import torch
 import numpy as np
 from torch import nn
-from torchvision.models import googlenet
+from torchvision.models import googlenet, GoogLeNet_Weights
 from pytorch_grad_cam import GradCAM, GuidedBackpropReLUModel
-from utils.classifier_output_targets import ClassifierOutputTargets
 from pytorch_grad_cam.utils.image import preprocess_image
 from utils.counterfactual_gradcam import CounterfactualGradCAM
 from utils.explainable_methods import run_gradcam, run_guided_backprop, run_guided_gradcam, run_counterfactual_gradcam
@@ -35,7 +34,7 @@ else:
 
 # Loading the model into the device and setting it to evaluation mode
 print("Loading googlenet...")
-model = googlenet(weights='DEFAULT')
+model = googlenet(weights=GoogLeNet_Weights.IMAGENET1K_V2)
 
 """
 Disabling auxiliary classifiers that are not needed for inferece

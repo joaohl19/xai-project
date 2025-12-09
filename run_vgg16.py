@@ -3,9 +3,8 @@ import glob
 import cv2
 import torch
 import numpy as np
-from torchvision.models import vgg16
+from torchvision.models import vgg16, VGG16_Weights
 from pytorch_grad_cam import GradCAM, GuidedBackpropReLUModel
-from utils.classifier_output_targets import ClassifierOutputTargets
 from utils.counterfactual_gradcam import CounterfactualGradCAM
 from pytorch_grad_cam.utils.image import preprocess_image
 from utils.explainable_methods import run_gradcam, run_guided_backprop, run_guided_gradcam, run_counterfactual_gradcam
@@ -34,7 +33,7 @@ else:
 
 # Loading the model into the device
 print("Loading vgg16...")
-model = vgg16(weights='DEFAULT')
+model = vgg16(weights=VGG16_Weights.IMAGENET1K_V2)
 model.to(device)
 model.eval()
 
