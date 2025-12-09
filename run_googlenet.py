@@ -34,7 +34,7 @@ else:
 
 # Loading the model into the device and setting it to evaluation mode
 print("Loading googlenet...")
-model = googlenet(weights=GoogLeNet_Weights.IMAGENET1K_V2)
+model = googlenet(weights=GoogLeNet_Weights.IMAGENET1K_V1)
 
 """
 Disabling auxiliary classifiers that are not needed for inferece

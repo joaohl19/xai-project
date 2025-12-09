@@ -33,7 +33,7 @@ else:
 
 # Loading the model into the device
 print("Loading vgg16...")
-model = vgg16(weights=VGG16_Weights.IMAGENET1K_V2)
+model = vgg16(weights=VGG16_Weights.IMAGENET1K_V1)
 model.to(device)
 model.eval()
 

@@ -33,7 +33,7 @@ else:
 
 # Loading the model into the device
 print("Loading ResNet50...")
-model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
+model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
 model.to(device)
 model.eval()
 
