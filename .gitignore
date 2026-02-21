@@ -7,7 +7,16 @@ __pycache__/
 *.pth
 *onnx
 
+venv/
+outputs_*/
 
+adversarial/input_adversarial/
+adversarial/results_clean/
+adversarial/results_adversarial/
 *.pdf
+
+biased_model/data_collection.py
+
+*.pptx
 
 biased_model/dataset
