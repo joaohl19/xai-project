@@ -8,7 +8,8 @@ __pycache__/
 *onnx
 
 venv/
-outputs_*/
+outputs_googlenet/
+outputs_vgg16/
 
 adversarial/input_adversarial/
 adversarial/results_clean/

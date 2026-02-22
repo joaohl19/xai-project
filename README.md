@@ -72,7 +72,8 @@ xai_project/
 │   ├── model.py          # SimpleCNN architecture
 │   ├── training.py       # Classifier training script
 │   ├── identifying_bias.py
-│   └── pretrained_model.pth # Pretrained weigths for SimpleCNN
+│   ├── pretrained_model.pth # Pretrained weigths for SimpleCNN
+|   └── examples/         # Cat and dog pictures used to evaluate the biased model
 │
 ├── input/                # Directory for clean input images (.jpg, .jpeg, .png)
 └── outputs_*/            # Generated results (outputs_vgg16, outputs_resnet50, etc.)
