@@ -141,14 +141,14 @@ Generate saliency maps and explanations for ImageNet-pretrained models using **G
 |--------|-------------|
 | **Grad-CAM** | Class activation mapping highlighting discriminative regions |
 | **Counterfactual Grad-CAM** | Highlights regions that decrease the model's confidence in a specific target class. |
-| **Guided Backpropagation** | Pixel-level gradients with ReLU guidance |
+| **Guided Backpropagation** | High-resolution map of the details the model focused on |
 | **Guided Grad-CAM** | Combines Grad-CAM with Guided Backprop for fine-grained detail |
 
 ```bash
 python run_vgg16.py
 ```
 
-Output structure:
+**Output structure:**
 
 ```
 outputs_vgg16/
@@ -158,11 +158,21 @@ outputs_vgg16/
 └── guided_grad-cam/
 ```
 
-Output format:
+**Output format:**
 
 Each XAI method saves images with filenames: `{class_label};{original_filename}`
 
 Example: `golden retriever;dog.jpg` → Grad-CAM heatmap for the predicted class "golden retriever".
+
+**Example results (model: ResNet50, target class: *bull mastiff*):**
+
+| **Grad-CAM** | **Counterfactual Grad-CAM** |
+|:------------:|:---------------------------:|
+| <div align="center">![Grad-CAM](outputs_resnet50/grad-cam/bull%20mastiff%3Bcat_dog.png)<br>*Coarse class discriminative localization*</div> | <div align="center">![Counterfactual Grad-CAM](outputs_resnet50/counterfactual_explanations/bull%20mastiff%3Bcat_dog.png)<br>*Negative evidence penalizing the target class*</div> |
+
+| **Guided Backpropagation** | **Guided Grad-CAM** |
+|:--------------------------:|:-------------------:|
+| <div align="center">![Guided Backpropagation](outputs_resnet50/guided_backprop/bull%20mastiff%3Bcat_dog.png)<br>*High-resolution, class-agnostic gradient flow*</div> | <div align="center">![Guided Grad-CAM](outputs_resnet50/guided_grad-cam/bull%20mastiff%3Bcat_dog.png)<br>*High-fidelity, class-specific pixel attribution*</div> |
 
 ---
 
@@ -211,6 +221,14 @@ python identifying_bias.py
 ```
 
 Heatmaps revealing the model's flawed attention are saved to `examples/cat/grad_cam` and `examples/dog/grad_cam `. You will observe the heatmaps heavily weighting the black/white pixels rather than the foreground subject.
+
+**Example: auditable misclassification**
+
+The image below shows a cat that the model **wrongfully predicted as a dog**. Because we use Grad-CAM, the prediction is **auditable**: we can see exactly which regions the model relied on. The heatmap shows that the model was confident about the *background* (light colors) rather than the animal itself, exposing the bias instead of the true subject.
+
+| Original (cat) | Grad-CAM (model predicted dog) |
+|:--------------:|:------------------------------:|
+| <div align="center">![Original cat](biased_model/examples/cat/samples/780.jpg)</div> | <div align="center">![Grad-CAM: model focused on background](biased_model/examples/cat/grad-cam/target_cat780.jpg)</div> |
 
 ---
 
